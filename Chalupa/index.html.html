@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chalupa Macroeconómica — Economía Abierta</title>
+  <style>
+    :root {
+      --font-display: ui-rounded, 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --amber-50: #fffbeb;
+      --amber-100: #fef3c7;
+      --amber-200: #fde68a;
+      --amber-300: #fcd34d;
+      --amber-400: #fbbf24;
+      --amber-500: #f59e0b;
+      --amber-600: #d97706;
+      --amber-700: #b45309;
+      --amber-800: #92400e;
+      --amber-900: #78350f;
+      --emerald-50: #ecfdf5;
+      --emerald-100: #d1fae5;
+      --emerald-200: #a7f3d0;
+      --emerald-300: #6ee7b7;
+      --emerald-600: #059669;
+      --emerald-700: #047857;
+      --emerald-800: #065f46;
+      --emerald-900: #064e3b;
+      --rose-50: #fff1f2;
+      --rose-100: #ffe4e6;
+      --rose-200: #fecdd3;
+      --rose-500: #f43f5e;
+      --rose-600: #e11d48;
+      --rose-700: #be123c;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-sans);
+      background-color: var(--amber-50);
+      background-image:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 38%),
+        radial-gradient(circle at 88% 12%, rgba(16, 185, 129, 0.13) 0%, transparent 40%),
+        radial-gradient(circle at 82% 88%, rgba(244, 63, 94, 0.1) 0%, transparent 42%);
+      color: var(--slate-800);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: var(--font-display);
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Toast container */
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 24rem;
+      width: calc(100% - 2rem);
+      pointer-events: none;
+    }
+
+    .toast-item {
+      pointer-events: auto;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(52, 211, 153, 0.45);
+      background: var(--slate-900);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .toast-item.warn {
+      background: var(--amber-900);
+      color: var(--amber-50);
+      border-color: rgba(251, 191, 36, 0.5);
+    }
+
+    .toast-dot {
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 9999px;
+      background: #34d399;
+      flex-shrink: 0;
+    }
+
+    .toast-item.warn .toast-dot {
+      background: var(--amber-400);
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(253, 230, 138, 0.85);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .header-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, var(--amber-400), #f97316, var(--rose-500));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.28);
+      flex-shrink: 0;
+      animation: floatSlow 3.4s ease-in-out infinite;
+    }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.625rem;
+      border-radius: 9999px;
+      background: var(--emerald-100);
+      color: var(--emerald-800);
+      border: 1px solid var(--emerald-200);
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--slate-600);
+      margin-top: 0.1rem;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      background: rgba(254, 243, 199, 0.85);
+      padding: 0.25rem;
+      border-radius: 1rem;
+      border: 1px solid var(--amber-200);
+      gap: 0.25rem;
+    }
+
+    .nav-btn {
+      border: none;
+      padding: 0.5rem 0.95rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      background: transparent;
+      color: var(--amber-900);
+    }
+
+    .nav-btn:hover {
+      background: rgba(253, 230, 138, 0.7);
+    }
+
+    .nav-btn.active {
+      background: var(--amber-600);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(180, 83, 9, 0.25);
+    }
+
+    /* Main container */
+    .main-wrap {
+      flex: 1;
+      max-width: 72rem;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 2.25rem;
+    }
+
+    .section-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Control bar */
+    .panel-box {
+      background: #fff;
+      border-radius: 1.5rem;
+      padding: 1.15rem 1.25rem;
+      border: 1px solid rgba(253, 230, 138, 0.95);
+      box-shadow: 0 2px 8px rgba(120, 53, 15, 0.05);
+    }
+
+    .player-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .toolbar-left, .toolbar-right, .name-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .label-dot {
+      display: inline-block;
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 9999px;
+      background: var(--amber-500);
+      margin-right: 0.35rem;
+    }
+
+    .field-label {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    .select-input {
+      border-radius: 1rem;
+      border: 1px solid var(--amber-300);
+      background: rgba(255, 251, 235, 0.75);
+      padding: 0.6rem 0.9rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--slate-800);
+      outline: none;
+    }
+
+    .select-input:focus, .text-input:focus {
+      box-shadow: 0 0 0 2px var(--amber-400);
+    }
+
+    .text-input {
+      border-radius: 1rem;
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      padding: 0.55rem 0.85rem;
+      font-size: 0.875rem;
+      color: var(--slate-800);
+      width: 11.5rem;
+      outline: none;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 1rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.12s ease, opacity 0.15s ease;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-dark {
+      background: var(--slate-800);
+      color: #fff;
+    }
+
+    .btn-dark:hover {
+      background: var(--slate-900);
+    }
+
+    .btn-emerald {
+      background: var(--emerald-600);
+      color: #fff;
+    }
+
+    .btn-emerald:hover {
+      background: var(--emerald-700);
+    }
+
+    .btn-rose-soft {
+      background: var(--rose-50);
+      color: var(--rose-700);
+      border: 1px solid var(--rose-200);
+    }
+
+    .btn-rose-soft:hover {
+      background: var(--rose-100);
+    }
+
+    .btn-amber-grad {
+      background: linear-gradient(90deg, var(--amber-500), #ea580c);
+      color: #fff;
+      font-weight: 700;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.95rem;
+      box-shadow: 0 6px 14px rgba(234, 88, 12, 0.25);
+    }
+
+    .btn-amber-grad:hover:not(:disabled) {
+      filter: brightness(1.04);
+    }
+
+    .btn-emerald-soft {
+      background: var(--emerald-50);
+      color: var(--emerald-800);
+      border: 1px solid var(--emerald-300);
+      padding: 0.72rem 1rem;
+    }
+
+    .btn-emerald-soft:hover:not(:disabled) {
+      background: var(--emerald-100);
+    }
+
+    .btn-slate-soft {
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+    }
+
+    .btn-slate-soft:hover {
+      background: var(--rose-50);
+      color: var(--rose-700);
+    }
+
+    .btn-amber-solid {
+      background: var(--amber-600);
+      color: #fff;
+    }
+
+    .btn-amber-solid:hover {
+      background: var(--amber-700);
+    }
+
+    /* Win banner */
+    .win-banner {
+      border-radius: 1.5rem;
+      background: linear-gradient(90deg, var(--amber-500), #f97316, var(--rose-500));
+      color: #fff;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 12px 24px rgba(234, 88, 12, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .win-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .win-star {
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .win-kicker {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--amber-100);
+    }
+
+    .win-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.15rem 0;
+    }
+
+    .win-desc {
+      font-size: 0.875rem;
+      color: var(--amber-50);
+    }
+
+    .btn-white {
+      background: #fff;
+      color: #ea580c;
+      font-weight: 700;
+    }
+
+    .btn-white:hover {
+      background: var(--amber-50);
+    }
+
+    /* Chalupa board frame */
+    .board-container {
+      max-width: 58rem;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .chalupa-card-frame {
+      background: #fff;
+      border-radius: 1.75rem;
+      padding: 1.5rem;
+      border: 2px solid var(--amber-300);
+      box-shadow:
+        0 10px 25px -5px rgba(120, 53, 15, 0.12),
+        0 4px 10px -2px rgba(120, 53, 15, 0.06),
+        inset 0 0 0 2px rgba(251, 191, 36, 0.45);
+    }
+
+    .board-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px dashed var(--amber-200);
+    }
+
+    .board-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--amber-100);
+      color: var(--amber-800);
+      margin-bottom: 0.35rem;
+    }
+
+    .board-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .progress-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 251, 235, 0.95);
+      padding: 0.6rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid var(--amber-200);
+    }
+
+    .progress-meta {
+      text-align: right;
+    }
+
+    .progress-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--slate-500);
+    }
+
+    .progress-count {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--amber-700);
+    }
+
+    .progress-track {
+      width: 6rem;
+      height: 0.625rem;
+      background: rgba(253, 230, 138, 0.85);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--amber-500), #10b981);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    /* 4x3 Grid (12 casillas) */
+    .chalupa-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .chalupa-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .chalupa-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .chalupa-card-frame {
+        padding: 1rem;
+      }
+    }
+
+    .tile-cell {
+      position: relative;
+      min-height: 8.25rem;
+      padding: 0.95rem;
+      border-radius: 1.1rem;
+      border: 2px solid rgba(253, 230, 138, 0.95);
+      background: rgba(255, 251, 235, 0.48);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .tile-cell:hover {
+      background: var(--amber-50);
+      border-color: var(--amber-400);
+    }
+
+    .tile-cell:active {
+      transform: scale(0.96);
+    }
+
+    .tile-marked {
+      background: linear-gradient(145deg, var(--amber-100) 0%, var(--amber-200) 100%) !important;
+      border-color: var(--amber-600) !important;
+      box-shadow: inset 0 2px 6px rgba(180, 83, 9, 0.18);
+    }
+
+    .tile-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+      gap: 0.4rem;
+    }
+
+    .tile-cat {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.18rem 0.45rem;
+      border-radius: 0.4rem;
+      background: #fff;
+      color: var(--slate-500);
+      border: 1px solid var(--amber-100);
+      line-height: 1.25;
+    }
+
+    .tile-marked .tile-cat {
+      background: rgba(180, 83, 9, 0.14);
+      color: var(--amber-900);
+      border-color: transparent;
+    }
+
+    .tile-ring {
+      width: 1.35rem;
+      height: 1.35rem;
+      border-radius: 9999px;
+      border: 2px dashed var(--amber-300);
+      flex-shrink: 0;
+    }
+
+    .ficha-stamp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 9999px;
+      background: var(--rose-600);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.78rem;
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.35);
+      flex-shrink: 0;
+      animation: stampPop 0.24s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .tile-term {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.28;
+      color: var(--slate-800);
+      margin: 0.45rem 0;
+    }
+
+    .tile-marked .tile-term {
+      color: var(--slate-900);
+    }
+
+    .tile-hint {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--slate-400);
+    }
+
+    .tile-marked .tile-hint {
+      color: var(--amber-900);
+    }
+
+    .board-footer {
+      margin-top: 1.25rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--amber-100);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--slate-500);
+    }
+
+    .board-footer strong {
+      color: var(--amber-800);
+    }
+
+    /* Caller view */
+    .caller-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .caller-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .caller-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 23rem;
+    }
+
+    .caller-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--amber-100);
+    }
+
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pill-amber {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--amber-100);
+      color: var(--amber-800);
+    }
+
+    .pill-slate {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .pill-emerald {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--emerald-50);
+      color: var(--emerald-700);
+      border: 1px solid var(--emerald-200);
+    }
+
+    .caller-stage {
+      margin: 1.75rem 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .q-circle {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 1.1rem;
+      background: var(--amber-100);
+      color: var(--amber-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+    }
+
+    .stage-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+
+    .stage-desc {
+      color: var(--slate-600);
+      max-width: 28rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .clue-quote {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--slate-800);
+      line-height: 1.5;
+      max-width: 40rem;
+    }
+
+    .answer-box {
+      margin-top: 0.4rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 1.1rem;
+      background: var(--emerald-50);
+      border: 2px solid var(--emerald-300);
+      color: var(--emerald-900);
+    }
+
+    .answer-kicker {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--emerald-700);
+      margin-bottom: 0.2rem;
+    }
+
+    .answer-term {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .hidden-answer-note {
+      margin-top: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 0.85rem;
+      background: var(--slate-100);
+      color: var(--slate-500);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .caller-actions {
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--amber-100);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .caller-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    /* History sidebar */
+    .history-panel {
+      display: flex;
+      flex-direction: column;
+      max-height: 32rem;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--amber-100);
+    }
+
+    .history-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding-right: 0.2rem;
+    }
+
+    .history-empty {
+      font-size: 0.875rem;
+      color: var(--slate-400);
+      font-style: italic;
+      text-align: center;
+      padding: 2.5rem 0.5rem;
+    }
+
+    .history-card {
+      padding: 0.75rem;
+      border-radius: 1rem;
+      border: 1px solid var(--slate-200);
+      background: rgba(248, 250, 252, 0.85);
+    }
+
+    .history-card.latest {
+      background: var(--amber-50);
+      border-color: var(--amber-300);
+    }
+
+    .history-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .history-term {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--slate-900);
+    }
+
+    .history-cat {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.12rem 0.45rem;
+      border-radius: 9999px;
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-600);
+    }
+
+    .history-clue {
+      font-size: 0.78rem;
+      color: var(--slate-600);
+      line-height: 1.35;
+    }
+
+    /* Links directory */
+    .links-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--amber-100);
+    }
+
+    .links-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .links-sub {
+      font-size: 0.875rem;
+      color: var(--slate-600);
+      margin-top: 0.2rem;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .links-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 580px) {
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .link-card {
+      padding: 1rem;
+      border-radius: 1.1rem;
+      border: 1px solid rgba(253, 230, 138, 0.95);
+      background: rgba(255, 251, 235, 0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .link-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .link-card-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--slate-900);
+    }
+
+    .link-card-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      background: #fff;
+      border: 1px solid var(--amber-200);
+      color: var(--amber-800);
+    }
+
+    .link-card-url {
+      font-size: 0.75rem;
+      color: var(--slate-500);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 0.25rem;
+    }
+
+    .link-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .link-btn-copy {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.75rem;
+      font-size: 0.78rem;
+    }
+
+    .link-btn-open {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.75rem;
+      font-size: 0.78rem;
+      background: #fff;
+      color: var(--slate-800);
+      border: 1px solid var(--amber-300);
+    }
+
+    .link-btn-open:hover {
+      background: var(--amber-100);
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid rgba(253, 230, 138, 0.75);
+      background: rgba(255, 255, 255, 0.75);
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--slate-500);
+    }
+
+    .site-footer strong {
+      color: var(--slate-700);
+    }
+
+    @keyframes stampPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.4) rotate(-18deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(-6deg);
+      }
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Notificación flotante no intrusiva -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Encabezado principal -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-row">
+            <h1 class="brand-title">Chalupa Macroeconómica</h1>
+            <span class="brand-pill">Economía Abierta</span>
+          </div>
+          <p class="brand-sub">14 cartas únicas de 12 casillas + mazo aleatorio de pistas y significados</p>
+        </div>
+      </div>
+
+      <!-- Selector de vista principal -->
+      <nav class="nav-tabs" aria-label="Modos de juego">
+        <button id="tabJugador" type="button" class="nav-btn active">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Mi Carta (1–14)
+        </button>
+        <button id="tabCantador" type="button" class="nav-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+          Cantador / Pantalla
+        </button>
+        <button id="tabEnlaces" type="button" class="nav-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          14 Enlaces
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-wrap">
+    <!-- ==================== VISTA 1: CARTA DEL JUGADOR ==================== -->
+    <section id="viewJugador" class="section-stack">
+      <div class="panel-box player-toolbar">
+        <div class="toolbar-left">
+          <label for="playerSelect" class="field-label">
+            <span class="label-dot"></span>Selecciona tu carta:
+          </label>
+          <select id="playerSelect" class="select-input"></select>
+
+          <div class="name-group">
+            <input id="playerNameInput" type="text" maxlength="24" placeholder="Tu nombre (opcional)" class="text-input" />
+            <button id="saveNameBtn" type="button" class="btn btn-dark">Guardar</button>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <button id="copyMyLinkBtn" type="button" class="btn btn-emerald">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            Copiar mi enlace
+          </button>
+
+          <button id="clearMarksBtn" type="button" class="btn btn-rose-soft">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Limpiar fichas
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner de ¡CHALUPA! cuando completa las 12 casillas -->
+      <div id="winBanner" class="win-banner hidden">
+        <div class="win-left">
+          <div class="win-star">★</div>
+          <div>
+            <p class="win-kicker">¡Carta completada!</p>
+            <h2 class="win-heading">¡CHALUPA! ¡LOTERÍA MACROECONÓMICA!</h2>
+            <p class="win-desc">Completaste las 12 casillas de tu carta. ¡Avisa a tu cantador!</p>
+          </div>
+        </div>
+        <button id="dismissWinBtn" type="button" class="btn btn-white">Seguir viendo carta</button>
+      </div>
+
+      <!-- Tarjeta principal de Chalupa (4x3 = 12 casillas) -->
+      <div class="board-container">
+        <div class="chalupa-card-frame">
+          <div class="board-header">
+            <div>
+              <span class="board-tag">Tabla #<span id="cardNumberLabel">1</span> de 14</span>
+              <h2 id="cardTitleLabel" class="board-title">Carta — Jugador 1</h2>
+            </div>
+
+            <div class="progress-box">
+              <div class="progress-meta">
+                <div class="progress-label">Progreso</div>
+                <div id="progressText" class="progress-count">0 / 12 casillas</div>
+              </div>
+              <div class="progress-track">
+                <div id="progressBar" class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chalupaGrid" class="chalupa-grid"></div>
+
+          <div class="board-footer">
+            <span>Toca o haz clic en un término cuando escuches su pista o significado para poner tu ficha.</span>
+            <strong>Gana quien complete las 12 casillas</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VISTA 2: MODO CANTADOR / PANTALLA ==================== -->
+    <section id="viewCantador" class="hidden">
+      <div class="caller-grid">
+        <div class="chalupa-card-frame caller-main">
+          <div class="caller-top-bar">
+            <div class="badge-group">
+              <span class="pill-amber">Mazo del Cantador</span>
+              <span id="deckCounterBadge" class="pill-slate">0 / 38 pistas sacadas</span>
+            </div>
+            <span id="deckRemainingBadge" class="pill-emerald">38 disponibles en el mazo</span>
+          </div>
+
+          <div id="callerStage" class="caller-stage">
+            <div class="q-circle">?</div>
+            <h2 class="stage-title">¡Listos para cantar la Chalupa!</h2>
+            <p class="stage-desc">
+              Presiona <strong>"Sacar pista al azar"</strong> para mostrar el significado o pista en pantalla y léelo en voz alta a tus 14 compañeros.
+            </p>
+          </div>
+
+          <div class="caller-actions">
+            <div class="caller-btn-group">
+              <button id="drawClueBtn" type="button" class="btn btn-amber-grad">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                Sacar pista al azar
+              </button>
+
+              <button id="toggleAnswerBtn" type="button" disabled class="btn btn-emerald-soft">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span id="toggleAnswerLabel">Revelar término</span>
+              </button>
+            </div>
+
+            <button id="resetDeckBtn" type="button" class="btn btn-slate-soft">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Barajar y reiniciar mazo
+            </button>
+          </div>
+        </div>
+
+        <!-- Historial de pistas ya cantadas -->
+        <aside class="panel-box history-panel">
+          <div class="history-header">
+            <h3 class="history-title">Pistas ya cantadas</h3>
+            <span id="historyCountPill" class="pill-amber">0</span>
+          </div>
+          <div id="historyList" class="history-list">
+            <p class="history-empty">
+              Aquí aparecerán los términos y pistas conforme los vayas sacando.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== VISTA 3: LOS 14 ENLACES PARA COMPAÑEROS ==================== -->
+    <section id="viewEnlaces" class="hidden">
+      <div class="panel-box">
+        <div class="links-header">
+          <div>
+            <h2 class="links-title">Enlaces directos para tus 14 compañeros</h2>
+            <p class="links-sub">
+              Cada enlace abre directamente la carta exclusiva de ese compañero con su propia combinación de 12 términos.
+            </p>
+          </div>
+          <button id="copyAllLinksBtn" type="button" class="btn btn-amber-solid">
+            Copiar lista de 14 enlaces
+          </button>
+        </div>
+
+        <div id="linksGrid" class="links-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Chalupa Macroeconómica • Basada en <strong>Análisis Macroeconómico de la Economía Abierta</strong>
+  </footer>
+
+  <script>
+    const MACRO_TERMS = [
+      {
+        id: 'balanza-pagos',
+        term: 'Balanza de Pagos',
+        category: 'Contabilidad externa',
+        clue: 'Registro sistemático de todas las transacciones económicas entre un país y el resto del mundo.'
+      },
+      {
+        id: 'cuenta-corriente',
+        term: 'Cuenta Corriente',
+        category: 'Balanza de Pagos',
+        clue: 'Componente principal de la balanza de pagos que incluye mercancías, servicios y transferencias unilaterales.'
+      },
+      {
+        id: 'balanza-comercial',
+        term: 'Balanza Comercial (mercancías)',
+        category: 'Cuenta Corriente',
+        clue: 'Parte de la cuenta corriente enfocada en el intercambio de mercancías con el exterior.'
+      },
+      {
+        id: 'balanza-servicios',
+        term: 'Balanza de Servicios',
+        category: 'Cuenta Corriente',
+        clue: 'Componente de la cuenta corriente distinto de las mercancías y las transferencias unilaterales.'
+      },
+      {
+        id: 'transferencias-unilaterales',
+        term: 'Transferencias Unilaterales',
+        category: 'Cuenta Corriente',
+        clue: 'Partida incluida dentro de la cuenta corriente junto con la balanza comercial y la de servicios.'
+      },
+      {
+        id: 'cuenta-capital-financiera',
+        term: 'Cuenta de Capital o Financiera',
+        category: 'Balanza de Pagos',
+        clue: 'Gran componente de la balanza de pagos que agrupa el capital privado y el capital público u oficial.'
+      },
+      {
+        id: 'capital-privado',
+        term: 'Capital Privado',
+        category: 'Cuenta de Capital o Financiera',
+        clue: 'Uno de los dos componentes principales de la cuenta de capital o financiera (junto al capital público u oficial).'
+      },
+      {
+        id: 'capital-publico-oficial',
+        term: 'Capital Público u Oficial',
+        category: 'Cuenta de Capital o Financiera',
+        clue: 'Componente del sector oficial dentro de la cuenta de capital o financiera.'
+      },
+      {
+        id: 'reservas-monetarias',
+        term: 'Reservas Monetarias Internacionales',
+        category: 'Balanza de Pagos',
+        clue: 'Sus variaciones aparecen en la balanza de pagos y respaldan intervenciones cambiarias.'
+      },
+      {
+        id: 'errores-omisiones',
+        term: 'Errores y Omisiones',
+        category: 'Balanza de Pagos',
+        clue: 'Partida de ajuste o registro complementario dentro de la balanza de pagos.'
+      },
+      {
+        id: 'credito',
+        term: 'Crédito (Partida Positiva)',
+        category: 'Divisas',
+        clue: 'Partida positiva en la balanza de pagos: ocurre cuando una transacción suministra divisas.'
+      },
+      {
+        id: 'debito',
+        term: 'Débito (Partida Negativa)',
+        category: 'Divisas',
+        clue: 'Partida negativa en la balanza de pagos: ocurre cuando una transacción exige gastar divisas.'
+      },
+      {
+        id: 'superavit-comercial',
+        term: 'Superávit Comercial',
+        category: 'Comercio exterior',
+        clue: 'Situación en la que las exportaciones son mayores que las importaciones (Exportaciones > Importaciones).'
+      },
+      {
+        id: 'deficit-comercial',
+        term: 'Déficit Comercial',
+        category: 'Comercio exterior',
+        clue: 'Situación en la que las exportaciones son menores que las importaciones (Exportaciones < Importaciones).'
+      },
+      {
+        id: 'exportaciones-netas',
+        term: 'Exportaciones Netas',
+        category: 'Comercio exterior',
+        clue: 'Resultado de restar importaciones a exportaciones; si es positivo, se acumulan activos extranjeros.'
+      },
+      {
+        id: 'activos-extranjeros',
+        term: 'Activos Extranjeros',
+        category: 'Comercio exterior',
+        clue: 'Lo que el país está acumulando cuando sus exportaciones netas son positivas.'
+      },
+      {
+        id: 'inversion-exterior-neta',
+        term: 'Inversión Exterior Neta',
+        category: 'Ahorro e inversión',
+        clue: 'Ahorro o inversión netos realizados en el extranjero (más o menos igual a las exportaciones netas).'
+      },
+      {
+        id: 'inversion-neta-negativa',
+        term: 'Inversión Neta Negativa',
+        category: 'Ahorro e inversión',
+        clue: 'Indica que los extranjeros están contribuyendo significativamente a la inversión nacional.'
+      },
+      {
+        id: 'expansion-economica',
+        term: 'Expansión Económica y Déficit',
+        category: 'Ciclo y balanza',
+        clue: 'Cuando es fuerte y la tasa de inversión supera a la tasa de ahorro nacional, puede producir déficits en la balanza de pagos.'
+      },
+      {
+        id: 'renta-produccion-nacional',
+        term: 'Renta y Producción Nacional',
+        category: 'Determinantes',
+        clue: 'Variables con las que las importaciones se relacionan positivamente.'
+      },
+      {
+        id: 'precios-relativos',
+        term: 'Precios Relativos',
+        category: 'Determinantes',
+        clue: 'Relación entre los precios de los bienes nacionales y los extranjeros de la que dependen importaciones y exportaciones.'
+      },
+      {
+        id: 'produccion-extranjera',
+        term: 'Producción Extranjera',
+        category: 'Determinantes',
+        clue: 'Factor externo del que dependen las exportaciones de un país.'
+      },
+      {
+        id: 'importaciones',
+        term: 'Importaciones',
+        category: 'Comercio exterior',
+        clue: 'Son débitos; dependen de la producción interior y de los precios relativos de bienes nacionales y extranjeros.'
+      },
+      {
+        id: 'exportaciones',
+        term: 'Exportaciones',
+        category: 'Comercio exterior',
+        clue: 'Son créditos; dependen de la producción extranjera y del precio relativo de nuestras exportaciones.'
+      },
+      {
+        id: 'tipo-de-cambio',
+        term: 'Tipo de Cambio',
+        category: 'Mercado de divisas',
+        clue: 'Precio de una moneda expresado en términos de otra, determinado en el mercado de divisas.'
+      },
+      {
+        id: 'mercado-de-divisas',
+        term: 'Mercado de Divisas',
+        category: 'Mercado cambiario',
+        clue: 'Mercado donde se determina el tipo de cambio mediante el equilibrio entre oferta y demanda de divisas.'
+      },
+      {
+        id: 'oferta-demanda-divisas',
+        term: 'Oferta y Demanda de Divisas',
+        category: 'Mercado cambiario',
+        clue: 'Fuerzas cuyo equilibrio determina el tipo de cambio de una moneda.'
+      },
+      {
+        id: 'devaluacion',
+        term: 'Devaluación',
+        category: 'Tipo de Cambio Fijo',
+        clue: 'Variación a la baja del valor de la moneda bajo un régimen de tipo de cambio fijo.'
+      },
+      {
+        id: 'revaluacion',
+        term: 'Revaluación',
+        category: 'Tipo de Cambio Fijo',
+        clue: 'Variación al alza del valor de la moneda bajo un régimen de tipo de cambio fijo.'
+      },
+      {
+        id: 'depreciacion',
+        term: 'Depreciación',
+        category: 'Tipo de Cambio Flexible',
+        clue: 'Caída o variación a la baja de una moneda determinada por el mercado bajo tipo de cambio flexible.'
+      },
+      {
+        id: 'apreciacion',
+        term: 'Apreciación',
+        category: 'Tipo de Cambio Flexible',
+        clue: 'Subida o variación al alza de una moneda determinada por el mercado bajo tipo de cambio flexible.'
+      },
+      {
+        id: 'empresas-no-financieras',
+        term: 'Empresas No Financieras',
+        category: 'Agentes cambiarios',
+        clue: 'Agentes del mercado cambiario que incluyen exportadoras, importadoras, turistas e inmigrantes.'
+      },
+      {
+        id: 'bancos-comerciales',
+        term: 'Bancos Comerciales',
+        category: 'Agentes cambiarios',
+        clue: 'Uno de los agentes clave que participan en el mercado de divisas junto a bancos centrales y corredores.'
+      },
+      {
+        id: 'bancos-centrales',
+        term: 'Bancos Centrales',
+        category: 'Agentes cambiarios',
+        clue: 'Autoridad monetaria que actúa como agente en el mercado cambiario y aplica políticas.'
+      },
+      {
+        id: 'corredores-de-cambio',
+        term: 'Corredores de Cambio',
+        category: 'Agentes cambiarios',
+        clue: 'Intermediarios clasificados como agentes dentro de la estructura del mercado cambiario.'
+      },
+      {
+        id: 'politica-cambiaria',
+        term: 'Política Cambiaria',
+        category: 'Política económica',
+        clue: 'Medidas tomadas por las autoridades económicas en conjunción con la política fiscal y monetaria ante efectos del tipo de cambio.'
+      },
+      {
+        id: 'politica-fiscal-monetaria',
+        term: 'Política Fiscal y Monetaria',
+        category: 'Política económica',
+        clue: 'Instrumentos usados junto a la política cambiaria para conseguir los objetivos económicos deseados.'
+      },
+      {
+        id: 'inflacion',
+        term: 'Inflación',
+        category: 'Efectos en la economía',
+        clue: 'Variable económica de importancia afectada por el tipo de cambio junto a balanza comercial, importaciones y exportaciones.'
+      }
+    ];
+
+    const TOTAL_PLAYERS = 14;
+    const GRID_SIZE = 12;
+
+    function mulberry32(seed) {
+      let a = seed >>> 0;
+      return function () {
+        a |= 0;
+        a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function shuffleWithSeed(array, seed) {
+      const copy = [...array];
+      const rng = mulberry32(seed);
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    const PLAYER_CARDS = (() => {
+      const basePool = shuffleWithSeed(MACRO_TERMS, 20261125);
+      const poolLen = basePool.length;
+      return Array.from({ length: TOTAL_PLAYERS }, (_, idx) => {
+        const playerNumber = idx + 1;
+        const startOffset = (idx * 5) % poolLen;
+        const picked = [];
+        for (let k = 0; k < GRID_SIZE; k++) {
+          picked.push(basePool[(startOffset + k) % poolLen]);
+        }
+        return {
+          playerNumber,
+          terms: shuffleWithSeed(picked, 3000 + playerNumber * 41)
+        };
+      });
+    })();
+
+    const STORAGE_KEY = 'chalupa_macro_economia_abierta_v3';
+    const state = {
+      activeTab: 'jugador',
+      currentPlayer: 1,
+      playerNames: {},
+      markedByPlayer: {},
+      deck: [],
+      drawnHistory: [],
+      currentClue: null,
+      answerRevealed: false
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            state.playerNames = parsed.playerNames || {};
+            state.markedByPlayer = parsed.markedByPlayer || {};
+            state.deck = Array.isArray(parsed.deck) ? parsed.deck : [];
+            state.drawnHistory = Array.isArray(parsed.drawnHistory) ? parsed.drawnHistory : [];
+            state.currentClue = parsed.currentClue || null;
+            state.answerRevealed = Boolean(parsed.answerRevealed);
+          }
+        }
+      } catch (err) {
+        console.warn('No se pudo cargar el estado local:', err);
+      }
+
+      if (state.deck.length === 0 && state.drawnHistory.length === 0) {
+        buildShuffledDeck();
+      }
+
+      const hashPlayer = getPlayerFromHash();
+      if (hashPlayer) {
+        state.currentPlayer = hashPlayer;
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          playerNames: state.playerNames,
+          markedByPlayer: state.markedByPlayer,
+          deck: state.deck,
+          drawnHistory: state.drawnHistory,
+          currentClue: state.currentClue,
+          answerRevealed: state.answerRevealed
+        }));
+      } catch (err) {
+        console.warn('No se pudo guardar el estado:', err);
+      }
+    }
+
+    function buildShuffledDeck() {
+      const ids = MACRO_TERMS.map(t => t.id);
+      for (let i = ids.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ids[i], ids[j]] = [ids[j], ids[i]];
+      }
+      state.deck = ids;
+      state.drawnHistory = [];
+      state.currentClue = null;
+      state.answerRevealed = false;
+    }
+
+    function getPlayerFromHash() {
+      const hash = window.location.hash || '';
+      const match = hash.match(/jugador=(\d+)/i);
+      if (!match) return null;
+      const num = parseInt(match[1], 10);
+      return num >= 1 && num <= TOTAL_PLAYERS ? num : null;
+    }
+
+    function getPlayerUrl(playerNumber) {
+      const base = window.location.href.split('#')[0];
+      return `${base}#jugador=${playerNumber}`;
+    }
+
+    function getPlayerDisplayName(playerNumber) {
+      const custom = (state.playerNames[playerNumber] || '').trim();
+      return custom ? custom : `Jugador ${playerNumber}`;
+    }
+
+    function getMarkedSet(playerNumber) {
+      const arr = state.markedByPlayer[playerNumber] || [];
+      return new Set(arr);
+    }
+
+    function setMarkedSet(playerNumber, set) {
+      state.markedByPlayer[playerNumber] = Array.from(set);
+      saveState();
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast-item ${type === 'warn' ? 'warn' : ''}`;
+      toast.innerHTML = `
+        <span class="toast-dot"></span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 260);
+      }, 2600);
+    }
+
+    function copyToClipboard(text, successMsg) {
+      try {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        tempInput.style.position = 'fixed';
+        tempInput.style.opacity = '0';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showToast(successMsg || '¡Copiado al portapapeles!');
+      } catch (err) {
+        showToast('No se pudo copiar automáticamente, copia el enlace manualmente.', 'warn');
+      }
+    }
+
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+
+      const tabs = {
+        jugador: { btn: document.getElementById('tabJugador'), view: document.getElementById('viewJugador') },
+        cantador: { btn: document.getElementById('tabCantador'), view: document.getElementById('viewCantador') },
+        enlaces: { btn: document.getElementById('tabEnlaces'), view: document.getElementById('viewEnlaces') }
+      };
+
+      Object.entries(tabs).forEach(([key, { btn, view }]) => {
+        const isActive = key === tabName;
+        view.classList.toggle('hidden', !isActive);
+        btn.classList.toggle('active', isActive);
+      });
+
+      if (tabName === 'enlaces') {
+        renderLinksDirectory();
+      } else if (tabName === 'cantador') {
+        renderCallerView();
+      } else {
+        renderPlayerCard();
+      }
+    }
+
+    function populatePlayerSelect() {
+      const select = document.getElementById('playerSelect');
+      select.innerHTML = '';
+      for (let i = 1; i <= TOTAL_PLAYERS; i++) {
+        const option = document.createElement('option');
+        option.value = String(i);
+        const customName = (state.playerNames[i] || '').trim();
+        option.textContent = customName
+          ? `Carta #${i} — ${customName}`
+          : `Carta #${i} (Jugador ${i})`;
+        if (i === state.currentPlayer) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      }
+    }
+
+    function renderPlayerCard() {
+      const pNum = state.currentPlayer;
+      const cardData = PLAYER_CARDS[pNum - 1];
+      const markedSet = getMarkedSet(pNum);
+
+      document.getElementById('cardNumberLabel').textContent = String(pNum);
+      document.getElementById('cardTitleLabel').textContent = `Carta — ${getPlayerDisplayName(pNum)}`;
+      document.getElementById('playerNameInput').value = state.playerNames[pNum] || '';
+
+      const markedCount = markedSet.size;
+      document.getElementById('progressText').textContent = `${markedCount} / ${GRID_SIZE} casillas`;
+      document.getElementById('progressBar').style.width = `${(markedCount / GRID_SIZE) * 100}%`;
+
+      const winBanner = document.getElementById('winBanner');
+      if (markedCount === GRID_SIZE) {
+        winBanner.classList.remove('hidden');
+      } else {
+        winBanner.classList.add('hidden');
+      }
+
+      const grid = document.getElementById('chalupaGrid');
+      grid.innerHTML = '';
+
+      cardData.terms.forEach((item, idx) => {
+        const isMarked = markedSet.has(item.id);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('aria-pressed', String(isMarked));
+        btn.className = `tile-cell ${isMarked ? 'tile-marked' : ''}`;
+
+        btn.innerHTML = `
+          <div class="tile-top">
+            <span class="tile-cat">#${idx + 1} • ${item.category}</span>
+            ${
+              isMarked
+                ? `<span class="ficha-stamp">✓</span>`
+                : `<span class="tile-ring"></span>`
+            }
+          </div>
+          <div class="tile-term">${item.term}</div>
+          <div class="tile-hint">${isMarked ? 'Ficha puesta — toca para quitar' : 'Toca para marcar'}</div>
+        `;
+
+        btn.addEventListener('click', () => {
+          const currentSet = getMarkedSet(pNum);
+          const wasFull = currentSet.size === GRID_SIZE;
+          if (currentSet.has(item.id)) {
+            currentSet.delete(item.id);
+          } else {
+            currentSet.add(item.id);
+          }
+          setMarkedSet(pNum, currentSet);
+          renderPlayerCard();
+
+          if (!wasFull && currentSet.size === GRID_SIZE) {
+            showToast(`¡${getPlayerDisplayName(pNum)} completó su carta! ¡CHALUPA!`, 'success');
+          }
+        });
+
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderCallerView() {
+      const totalTerms = MACRO_TERMS.length;
+      const drawnCount = state.drawnHistory.length;
+      const remainingCount = state.deck.length;
+
+      document.getElementById('deckCounterBadge').textContent = `${drawnCount} / ${totalTerms} pistas sacadas`;
+      document.getElementById('deckRemainingBadge').textContent = `${remainingCount} disponibles en el mazo`;
+      document.getElementById('historyCountPill').textContent = String(drawnCount);
+
+      const drawBtn = document.getElementById('drawClueBtn');
+      drawBtn.disabled = remainingCount === 0;
+
+      const toggleAnswerBtn = document.getElementById('toggleAnswerBtn');
+      const toggleAnswerLabel = document.getElementById('toggleAnswerLabel');
+      toggleAnswerBtn.disabled = !state.currentClue;
+      toggleAnswerLabel.textContent = state.answerRevealed ? 'Ocultar término' : 'Revelar término';
+
+      const stage = document.getElementById('callerStage');
+      if (!state.currentClue) {
+        stage.innerHTML = `
+          <div class="q-circle">?</div>
+          <h2 class="stage-title">¡Listos para cantar la Chalupa!</h2>
+          <p class="stage-desc">
+            Presiona <strong>"Sacar pista al azar"</strong> para mostrar el significado o pista en pantalla y léelo en voz alta a tus 14 compañeros.
+          </p>
+        `;
+      } else {
+        const termObj = MACRO_TERMS.find(t => t.id === state.currentClue);
+        if (termObj) {
+          stage.innerHTML = `
+            <span class="pill-amber">Pista #${drawnCount} • ${termObj.category}</span>
+            <p class="clue-quote">“${termObj.clue}”</p>
+            ${
+              state.answerRevealed
+                ? `<div class="answer-box">
+                     <span class="answer-kicker">Término / Respuesta</span>
+                     <span class="answer-term">${termObj.term}</span>
+                   </div>`
+                : `<div class="hidden-answer-note">
+                     Término oculto — presiona "Revelar término" cuando los jugadores marquen o respondan
+                   </div>`
+            }
+          `;
+        }
+      }
+
+      const historyList = document.getElementById('historyList');
+      if (state.drawnHistory.length === 0) {
+        historyList.innerHTML = `
+          <p class="history-empty">
+            Aquí aparecerán los términos y pistas conforme los vayas sacando.
+          </p>
+        `;
+      } else {
+        historyList.innerHTML = '';
+        [...state.drawnHistory].reverse().forEach((itemId, idxFromTop) => {
+          const termObj = MACRO_TERMS.find(t => t.id === itemId);
+          if (!termObj) return;
+          const orderNum = state.drawnHistory.length - idxFromTop;
+          const card = document.createElement('div');
+          card.className = `history-card ${idxFromTop === 0 ? 'latest' : ''}`;
+          card.innerHTML = `
+            <div class="history-card-top">
+              <span class="history-term">${orderNum}. ${termObj.term}</span>
+              <span class="history-cat">${termObj.category}</span>
+            </div>
+            <p class="history-clue">${termObj.clue}</p>
+          `;
+          historyList.appendChild(card);
+        });
+      }
+    }
+
+    function renderLinksDirectory() {
+      const grid = document.getElementById('linksGrid');
+      grid.innerHTML = '';
+
+      for (let p = 1; p <= TOTAL_PLAYERS; p++) {
+        const url = getPlayerUrl(p);
+        const displayName = getPlayerDisplayName(p);
+        const markedCount = getMarkedSet(p).size;
+
+        const box = document.createElement('div');
+        box.className = 'link-card';
+        box.innerHTML = `
+          <div>
+            <div class="link-card-top">
+              <span class="link-card-name">Carta #${p} — ${displayName}</span>
+              <span class="link-card-count">${markedCount}/${GRID_SIZE}</span>
+            </div>
+            <p class="link-card-url" title="${url}">${url}</p>
+          </div>
+          <div class="link-card-actions">
+            <button type="button" data-copy-player="${p}" class="btn btn-emerald link-btn-copy">
+              Copiar enlace
+            </button>
+            <button type="button" data-open-player="${p}" class="btn link-btn-open">
+              Abrir carta
+            </button>
+          </div>
+        `;
+
+        box.querySelector('[data-copy-player]').addEventListener('click', () => {
+          copyToClipboard(url, `Enlace de Carta #${p} (${displayName}) copiado.`);
+        });
+
+        box.querySelector('[data-open-player]').addEventListener('click', () => {
+          state.currentPlayer = p;
+          window.location.hash = `jugador=${p}`;
+          populatePlayerSelect();
+          switchTab('jugador');
+        });
+
+        grid.appendChild(box);
+      }
+    }
+
+    function attachEvents() {
+      document.getElementById('tabJugador').addEventListener('click', () => switchTab('jugador'));
+      document.getElementById('tabCantador').addEventListener('click', () => switchTab('cantador'));
+      document.getElementById('tabEnlaces').addEventListener('click', () => switchTab('enlaces'));
+
+      document.getElementById('playerSelect').addEventListener('change', (e) => {
+        const num = parseInt(e.target.value, 10);
+        if (num >= 1 && num <= TOTAL_PLAYERS) {
+          state.currentPlayer = num;
+          window.location.hash = `jugador=${num}`;
+          renderPlayerCard();
+        }
+      });
+
+      document.getElementById('saveNameBtn').addEventListener('click', () => {
+        const input = document.getElementById('playerNameInput');
+        state.playerNames[state.currentPlayer] = input.value.trim();
+        saveState();
+        populatePlayerSelect();
+        renderPlayerCard();
+        showToast('Nombre guardado para esta carta.');
+      });
+
+      document.getElementById('copyMyLinkBtn').addEventListener('click', () => {
+        const url = getPlayerUrl(state.currentPlayer);
+        copyToClipboard(url, `Enlace copiado para ${getPlayerDisplayName(state.currentPlayer)}.`);
+      });
+
+      document.getElementById('clearMarksBtn').addEventListener('click', () => {
+        setMarkedSet(state.currentPlayer, new Set());
+        renderPlayerCard();
+        showToast('Fichas limpiadas en tu carta.');
+      });
+
+      document.getElementById('dismissWinBtn').addEventListener('click', () => {
+        document.getElementById('winBanner').classList.add('hidden');
+      });
+
+      document.getElementById('drawClueBtn').addEventListener('click', () => {
+        if (state.deck.length === 0) {
+          showToast('Ya se sacaron todas las pistas del mazo. ¡Reinícialo para jugar otra ronda!', 'warn');
+          return;
+        }
+        const nextId = state.deck.pop();
+        state.currentClue = nextId;
+        state.drawnHistory.push(nextId);
+        state.answerRevealed = false;
+        saveState();
+        renderCallerView();
+      });
+
+      document.getElementById('toggleAnswerBtn').addEventListener('click', () => {
+        if (!state.currentClue) return;
+        state.answerRevealed = !state.answerRevealed;
+        saveState();
+        renderCallerView();
+      });
+
+      document.getElementById('resetDeckBtn').addEventListener('click', () => {
+        buildShuffledDeck();
+        saveState();
+        renderCallerView();
+        showToast('Mazo barajado y listo para una nueva partida.');
+      });
+
+      document.getElementById('copyAllLinksBtn').addEventListener('click', () => {
+        const lines = [];
+        for (let p = 1; p <= TOTAL_PLAYERS; p++) {
+          lines.push(`Carta #${p} (${getPlayerDisplayName(p)}): ${getPlayerUrl(p)}`);
+        }
+        copyToClipboard(lines.join('\n'), 'Los 14 enlaces de tus compañeros fueron copiados.');
+      });
+
+      window.addEventListener('hashchange', () => {
+        const pFromHash = getPlayerFromHash();
+        if (pFromHash && pFromHash !== state.currentPlayer) {
+          state.currentPlayer = pFromHash;
+          populatePlayerSelect();
+          renderPlayerCard();
+          switchTab('jugador');
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      populatePlayerSelect();
+      attachEvents();
+      renderPlayerCard();
+      renderCallerView();
+    });
+  </script>
+</body>
+</html>
